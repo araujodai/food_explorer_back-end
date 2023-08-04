@@ -35,6 +35,20 @@ class MenuController {
     response.json();
 
   };
+
+  async show(request, response) {
+    const { id } = request.params;
+
+    const menu_item = await knex("menu").where({ id }).first();
+    const ingredients = await knex("ingredients").where({ menu_item: id }).orderBy("name");
+
+    return response.json({
+      ...menu_item,
+      ingredients
+    });
+
+  };
+
 };
 
 module.exports = MenuController;
