@@ -49,6 +49,22 @@ class MenuController {
 
   };
 
+  async delete(request, response) {
+    const { user_id, id } = request.params;
+
+    const user = await knex("users").where({ id: user_id }).first();
+    const isAdmin = user.is_admin;
+
+    if (!isAdmin) {
+      throw new AppError("Esse usuário não está autorizado a realizar esta ação.");
+    };
+
+    await knex("ingredients").where({ menu_item: id }).delete();
+    await knex("menu").where({ id }).delete();
+
+    return response.json();
+  };
+
 };
 
 module.exports = MenuController;
