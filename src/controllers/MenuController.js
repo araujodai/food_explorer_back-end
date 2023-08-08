@@ -50,7 +50,8 @@ class MenuController {
   };
 
   async delete(request, response) {
-    const { user_id, id } = request.params;
+    const { id } = request.params;
+    const { user_id } = request.query;
 
     const user = await knex("users").where({ id: user_id }).first();
     const isAdmin = user.is_admin;
@@ -63,6 +64,27 @@ class MenuController {
     await knex("menu").where({ id }).delete();
 
     return response.json();
+  };
+
+  async index(request, response) {
+    const { search } = request.query;
+
+    let menu;
+
+    if (search) {
+      menu = await knex("menu")
+      .whereLike("name", `%${search}%`)
+      .orWhereIn("id", function() {
+        this.select("menu_item_id")
+        .from("ingredients")
+        .whereLike("name", `%${search}%`);
+      });
+
+    } else {
+      menu = await knex("menu")
+    };
+
+    return response.json(menu);
   };
 
 };
