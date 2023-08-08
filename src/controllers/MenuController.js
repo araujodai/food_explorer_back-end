@@ -25,7 +25,7 @@ class MenuController {
 
     const ingredientsInsert = ingredients.map(name => {
       return {
-        menu_item: menu_id,
+        menu_item_id: menu_id,
         name
       }
     });
@@ -40,7 +40,7 @@ class MenuController {
     const { id } = request.params;
 
     const menu_item = await knex("menu").where({ id }).first();
-    const ingredients = await knex("ingredients").where({ menu_item: id }).orderBy("name");
+    const ingredients = await knex("ingredients").where({ menu_item_id: id }).orderBy("name");
 
     return response.json({
       ...menu_item,
@@ -60,7 +60,7 @@ class MenuController {
       throw new AppError("Esse usuário não está autorizado a realizar esta ação.");
     };
 
-    await knex("ingredients").where({ menu_item: id }).delete();
+    await knex("ingredients").where({ menu_item_id: id }).delete();
     await knex("menu").where({ id }).delete();
 
     return response.json();
