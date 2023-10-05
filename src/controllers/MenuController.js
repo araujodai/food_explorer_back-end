@@ -54,12 +54,14 @@ class MenuController {
   async update(request, response) {
     const { name, description, price, category, ingredients } = request.body;
     const { id } = request.params;
+    // const imageFileName = request.file.filename;
+
 
     if (!name || !description || !price || !category || !ingredients) {
       throw new AppError("Preencha todos os campos.");
     }
 
-    await knex("menu").where({ id }).update({
+    await knex("menu").where({ id }).first().update({
       name,
       description,
       price,
