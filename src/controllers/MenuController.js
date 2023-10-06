@@ -1,29 +1,27 @@
 const knex = require("../database/knex");
 const AppError = require("../utils/AppError");
+const DiskStorage = require("../providers/DiskStorage");
 
 class MenuController {
   async create(request, response) {
     const { name, description, price, category, ingredients } = request.body;
-    // const user_id = request.user.id;
+    const imageUploaded = request.file ? request.file.filename : null;
 
-
-    // const user = await knex("users").where({ id: user_id }).first();
-    // const isAdmin = user.is_admin;
-    
-
-    // if (!isAdmin) {
-    //   throw new AppError("Somente administradores podem criar um novo prato.");
-      
-    // };
     if (!name || !description || !price || !category || !ingredients) {
       throw new AppError("Preencha todos os campos.");
-    }
+    };
+
+    if (imageUploaded) {
+      const diskStorage = new DiskStorage();
+      await diskStorage.saveFile(imageUploaded);
+    };
 
     const [menu_id] = await knex("menu").insert({
       name,
       description,
       price,
-      category
+      category,
+      image: imageUploaded,
     });
 
     const ingredientsInsert = ingredients.map(name => {
@@ -54,19 +52,32 @@ class MenuController {
   async update(request, response) {
     const { name, description, price, category, ingredients } = request.body;
     const { id } = request.params;
-    // const imageFileName = request.file.filename;
-
+    const imageUploaded = request.file ? request.file.filename : null;
 
     if (!name || !description || !price || !category || !ingredients) {
       throw new AppError("Preencha todos os campos.");
     }
 
+    if (imageUploaded) {
+      const diskStorage = new DiskStorage();
+      const menu_item = await knex("menu").where({ id }).first();
+
+      if (menu_item.image) {
+        await diskStorage.deleteFile(menu_item.image);
+      };
+
+      await diskStorage.saveFile(imageUploaded);
+      console.log("imagem carregada")
+    }
+    console.log(imageUploaded);
+ 
     await knex("menu").where({ id }).first().update({
       name,
       description,
       price,
       category,
-      updated_at: knex.fn.now()
+      image: imageUploaded,
+      updated_at: knex.fn.now(),
     });
 
     const ingredientsUpdate = ingredients.map(name => {
