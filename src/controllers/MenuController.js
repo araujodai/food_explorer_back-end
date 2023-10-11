@@ -24,7 +24,7 @@ class MenuController {
       image: imageUploaded,
     });
 
-    const ingredientsInsert = ingredients.map(name => {
+    const ingredientsInsert = JSON.parse(ingredients).map(name => {
       return {
         menu_item_id: menu_id,
         name
@@ -69,7 +69,7 @@ class MenuController {
       await diskStorage.saveFile(imageUploaded);
       console.log("imagem carregada")
     }
-    console.log(imageUploaded);
+    console.log(imageUploaded); // linha teste
  
     await knex("menu").where({ id }).first().update({
       name,
