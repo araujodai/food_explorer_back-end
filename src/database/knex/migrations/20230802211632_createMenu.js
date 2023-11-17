@@ -2,7 +2,7 @@ exports.up = knex => knex.schema.createTable("menu", table => {
   table.increments("id");
   table.text("name");
   table.text("description");
-  table.decimal("price", 10, 2);
+  table.decimal("price", 10, 2); //mudar para float
   table.text("category");
   table.text("image").defaultTo(null);
   table.timestamp("created_at").defaultTo(knex.fn.now());

@@ -52,35 +52,34 @@ class MenuController {
   async update(request, response) {
     const { name, description, price, category, ingredients } = request.body;
     const { id } = request.params;
-    const imageUploaded = request.file ? request.file.filename : null;
+
+    const diskStorage = new DiskStorage();
 
     if (!name || !description || !price || !category || !ingredients) {
       throw new AppError("Preencha todos os campos.");
-    }
+    };
 
-    if (imageUploaded) {
-      const diskStorage = new DiskStorage();
-      const menu_item = await knex("menu").where({ id }).first();
+    const menu_item = await knex("menu").where({ id }).first();
+    const image = request.file ? request.file.filename : menu_item.image;
 
+    if (request.file) {
       if (menu_item.image) {
         await diskStorage.deleteFile(menu_item.image);
       };
 
-      await diskStorage.saveFile(imageUploaded);
-      console.log("imagem carregada")
-    }
-    console.log(imageUploaded); // linha teste
- 
+      await diskStorage.saveFile(image);
+    };
+
     await knex("menu").where({ id }).first().update({
       name,
       description,
       price,
       category,
-      image: imageUploaded,
+      image: image,
       updated_at: knex.fn.now(),
     });
 
-    const ingredientsUpdate = ingredients.map(name => {
+    const ingredientsUpdate = JSON.parse(ingredients).map(name => {
       return {
         menu_item_id: id,
         name
