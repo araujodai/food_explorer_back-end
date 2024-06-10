@@ -19,8 +19,12 @@ function ensureAuthenticated(request, response, next) {
     };
 
     return next();
-  } catch {
-    throw new AppError("JWT Token inválido", 401);
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return response.status(401).json({ message: "Sua sessão expirou. Por favor, faça login novamente." });
+    } else {
+      return response.status(401).json({ message: "JWT Token inválido" });
+    }
   };
 };
 

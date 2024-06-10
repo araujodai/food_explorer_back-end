@@ -27,7 +27,7 @@ class MenuController {
     const ingredientsInsert = JSON.parse(ingredients).map(name => {
       return {
         menu_item_id: menu_id,
-        name
+        name,
       }
     });
 
@@ -55,53 +55,50 @@ class MenuController {
 
     const diskStorage = new DiskStorage();
 
-    if (!name || !description || !price || !category || !ingredients) {
-      throw new AppError("Preencha todos os campos.");
+    const menu_item = await knex("menu").where({ id }).first();
+
+    if (!menu_item) {
+      throw new AppError("Item do menu não encontrado.");
     };
 
-    const menu_item = await knex("menu").where({ id }).first();
-    const image = request.file ? request.file.filename : menu_item.image;
+    const updatedName = name || menu_item.name;
+    const updatedDescription = description || menu_item.description;
+    const updatedPrice = price !== undefined ? price : menu_item.price;
+    const updatedCategory = category || menu_item.category;
+    const updatedImage = request.file ? request.file.filename : menu_item.image;
 
     if (request.file) {
       if (menu_item.image) {
         await diskStorage.deleteFile(menu_item.image);
       };
-
-      await diskStorage.saveFile(image);
+      await diskStorage.saveFile(updatedImage);
     };
 
-    await knex("menu").where({ id }).first().update({
-      name,
-      description,
-      price,
-      category,
-      image: image,
+    await knex("menu").where({ id }).update({
+      name: updatedName,
+      description: updatedDescription,
+      price: updatedPrice,
+      category: updatedCategory,
+      image: updatedImage,
       updated_at: knex.fn.now(),
     });
 
-    const ingredientsUpdate = JSON.parse(ingredients).map(name => {
-      return {
+    if (ingredients) {
+      const ingredientsArray = Array.isArray(ingredients) ? ingredients : JSON.parse(ingredients);
+      const ingredientsUpdate = ingredientsArray.map((name) => ({
         menu_item_id: id,
-        name
-      }
-    });
+        name,
+      }));
 
-    await knex("ingredients").where({ menu_item_id: id }).delete();
-    await knex("ingredients").insert(ingredientsUpdate);
+      await knex("ingredients").where({ menu_item_id: id }).delete();
+      await knex("ingredients").insert(ingredientsUpdate);
+    }
 
     return response.json();
   };
 
   async delete(request, response) {
     const { id } = request.params;
-    // const { user_id } = request.query;
-
-    // const user = await knex("users").where({ id: user_id }).first();
-    // const isAdmin = user.is_admin;
-
-    // if (!isAdmin) {
-    //   throw new AppError("Esse usuário não está autorizado a realizar esta ação.");
-    // };
 
     await knex("ingredients").where({ menu_item_id: id }).delete();
     await knex("menu").where({ id }).delete();
