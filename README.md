@@ -81,10 +81,8 @@ ADMIN:
 Para rodar o projeto localmente será necessário primeiro clonar o projeto, selecione um local ou pasta de sua escolha para armazenar o projeto e acesse o caminho via terminal.
 
 Após selecionar o caminho de sua escolha, execute o comando abaixo:
-```npm
-
+```bash
 git clone https://github.com/seu-usuario/seu-projeto.git
-
 ```
 
 Acesse o diretório do projeto:
@@ -96,14 +94,12 @@ Instale as dependências:
 
 ```bash
 npm install
-# ou
-yarn install
 ```
 
 Inicie o servidor:
 
 ```bash
-npm start
+npm run dev
 ```
 
 <br><br>
