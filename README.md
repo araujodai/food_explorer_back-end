@@ -82,22 +82,20 @@ Para rodar o projeto localmente será necessário primeiro clonar o projeto, sel
 
 Após selecionar o caminho de sua escolha, execute o comando abaixo:
 ```bash
-git clone https://github.com/seu-usuario/seu-projeto.git
+git clone https://github.com/araujodai/food_explorer_back-end
 ```
 
 Acesse o diretório do projeto:
 ```bash
-cd repositorio
+cd food_explorer_back-end
 ```
 
 Instale as dependências:
-
 ```bash
 npm install
 ```
 
 Inicie o servidor:
-
 ```bash
 npm run dev
 ```
