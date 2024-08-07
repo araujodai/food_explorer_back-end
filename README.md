@@ -30,7 +30,7 @@ Para logar na aplicação e testar suas fucionalidades, utilize um dos logins j�
 | Tipo  | E-mail           | Senha        |
 |-------|------------------|--------------|
 | USER  | user@email.com   | usertest123  |
-| ADMIN | admin@email.com  | admintest123 |
+| ADMIN | admin@email.com  | 123456       |
 
 
 
