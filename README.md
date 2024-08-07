@@ -580,8 +580,8 @@ ser obtido através da listagem de pratos.
 
 *Ao executar receberemos a imagem atribuída ao prato na aba preview.*
 
+<br><br>
 
-
-Projeto criado pela [Rocketseat](https://github.com/Rocketseat) e desenvolvido por [Daiane&nbsp;Araújo](https://github.com/araujodai).
+Projeto criado por [Rocketseat](https://github.com/Rocketseat) e desenvolvido por [Daiane&nbsp;Araújo](https://github.com/araujodai).
 
 
